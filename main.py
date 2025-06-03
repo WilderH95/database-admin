@@ -1,6 +1,7 @@
 import pandas as pd
 from dictionaries import teams, tri_codes, matches
 from data_handler import DataHandler
+from db_admin import DBAdmin
 
 COMPETITION = "Premier League"
 
@@ -54,12 +55,15 @@ tt_mws = data.create_tt_mws()
 # db of matches.
 match_ids = data.create_match_ids()
 
-# Call the "create_fixs_dict" method and pass in all the aboce lists that have been created to populate the "matches" dict.
+# Call the "create_fixs_dict" method and pass in all the above lists that have been created to populate the "matches" dict.
 data.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams_named, away_teams_named, venues,
                       social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
                       amount_of_fixtures)
 
 # Use pandas to translate the "matches" dictionary into a dataframe, then export this as a CSV using pandas.
-pl_dataframe = pd.DataFrame(matches)
+pl_dataframe = data.create_df()
 pl_dataframe.to_csv("PL_Matches.csv")
 print("CSV created successfully.")
+
+db_admin = DBAdmin()
+db_admin.create_new_matches()
