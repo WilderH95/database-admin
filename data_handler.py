@@ -3,7 +3,7 @@ import json
 from collections import namedtuple
 from dictionaries import matches
 
-class OptaHandler:
+class DataHandler:
 
     def __init__(self, opta_f1):
         self.tree = ET.parse(opta_f1)
