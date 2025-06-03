@@ -1,0 +1,61 @@
+teams = {
+    "t3" : "Arsenal",
+    "t7" : "Aston Villa",
+    "t91" : "Bournemouth",
+    "t94" : "Brentford",
+    "t36" : "Brighton",
+    "t8" : "Chelsea",
+    "t31" : "Crystal Palace",
+    "t11" : "Everton",
+    "t54" : "Fulham",
+    "t40" : "Ipswich",
+    "t13" : "Leicester",
+    "t14" : "Liverpool",
+    "t43" : "Man City",
+    "t1" : "Man Utd",
+    "t4" : "Newcastle",
+    "t17" : "Nottingham Forest",
+    "t20" : "Southampton",
+    "t6" : "Spurs",
+    "t21": "West Ham",
+    "t39" : "Wolves"
+}
+
+tri_codes = {
+    "Arsenal" : "ARS",
+    "Aston Villa" : "AVL",
+    "Bournemouth" : "BOU",
+    "Brentford" : "BRE",
+    "Brighton" : "BHA",
+    "Chelsea" : "CHE",
+    "Crystal Palace" : "CRY",
+    "Everton" : "EVE",
+    "Fulham" : "FUL",
+    "Ipswich" : "IPS",
+    "Leicester" : "LEI",
+    "Liverpool" : "LIV",
+    "Man City" : "MCI",
+    "Man Utd" : "MUN",
+    "Newcastle" : "NEW",
+    "Nottingham Forest" : "NFO",
+    "Southampton" : "SOU",
+    "Spurs" : "TOT",
+    "West Ham" : "WHU",
+    "Wolves" : "WOL"
+}
+
+matches = {
+    # 'MatchId' : [],
+    'Competition' : [],
+    'OptaID' : [],
+    'MatchDate' : [],
+    'KickOffTime' : [],
+    'TeamID1' : [],
+    'TeamID2' : [],
+    # 'Score1' : [],
+    # 'Score2' : [],
+    'Venue' : [],
+    'MatchHashTag' : [],
+    'StatsPerformMatchID' : [],
+    'TeamTalksMatchWeek' : []
+}
