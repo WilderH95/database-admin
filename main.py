@@ -14,88 +14,37 @@ SP_MATCH_LIST = 'Stats_Perform_Match_List.json'
 # Initialise Opta Handler class (pass in latest F1 file from Opta)
 opta = OptaHandler(OPTA_F1)
 
-
 # Get all match dates and match times and put them into two lists
 dates = opta.get_match_dates()
 times = opta.get_match_times()
 
-#TODO 3 - GET ALL THE HOME TEAMS AND PUT THEM IN A LIST - DONE
+# Get all the home and away teams and put them into two lists
+home_teams = opta.get_home_teams()
+away_teams = opta.get_away_teams()
 
-home_teams = []
+# Get all results and add to lists - work out the amount of results and fixtures outstanding
+results = opta.get_results()
+home_team_scores = results.home_team_scores
+away_team_scores = results.away_team_scores
+amount_of_results = results.amount_of_results
+amount_of_fixtures = results.amount_of_fixtures
 
-for n in range(380):
-    home_team = opta.root[0][n].find('TeamData').attrib['TeamRef']
-    home_teams.append(home_team)
-
-#TODO 4 - GET ALL THE AWAY TEAMS AND PUT THEM IN A LIST - DONE
-
-away_teams = []
-
-for n in range(380):
-    try:
-        away_team = opta.root[0][n][5].attrib['TeamRef']
-    except IndexError:
-        away_team = opta.root[0][n][4].attrib['TeamRef']
-
-    away_teams.append(away_team)
-
-#TODO 12 - HANDLE RESULTS AS WELL AS FIXTURES - DONE
-
-# home_team_scores = []
-#
-# for n in range(380):
-#     try:
-#         home_team_score = root[0][n].find('TeamData').attrib['Score']
-#         home_team_scores.append(home_team_score)
-#     except KeyError:
-#         pass
-#
-# away_team_scores = []
-#
-# for n in range(380):
-#     try:
-#         try:
-#             away_team_score = root[0][n][5].attrib['Score']
-#         except IndexError:
-#             away_team_score = root[0][n][4].attrib['Score']
-#         away_team_scores.append(away_team_score)
-#     except KeyError:
-#         pass
-#
-# amount_of_results = len(home_team_scores)
-# amount_of_fixtures = 380 - amount_of_results
-
-#TODO 5 - TRANSLATE OPTA IDs INTO ACTUAL TEAM NAMES - DONE
-
+# Use "teams" dictionary to translate opta ids into desired team names
 home_teams_named = [teams[x] for x in home_teams]
 away_teams_named = [teams[x] for x in away_teams]
 
-#TODO 6 - GET ALL THE OPTA MATCH IDs AND ADD THEM TO A LIST - DONE
+# Get all Opta IDs and add them to a list
+opta_ids = opta.get_opta_ids()
 
-opta_ids = []
+# Get the venues and add them to a list
+venues = opta.get_venues()
 
-for n in range(380):
-    opta_id = opta.root[0][n].attrib['uID'].strip("g")
-    opta_ids.append(opta_id)
-
-#TODO 7 - GET ALL THE VENUES AND ADD THEM TO A LIST - DONE
-
-venues = []
-
-for n in range(380):
-    venue = opta.root[0][n].find("Stat").text
-    venues.append(venue)
-
-#TODO 8 - CREATE THE MATCH SOCIAL TAGS AND ADD THEM TO A LIST - DONE
-
+# Use the "tri_codes" dictionary with the named home teams lists to create to separate social tag lists. Then call
+# "create_social_tag" to join these into one list.
 home_team_social = [tri_codes[x] for x in home_teams_named]
 away_team_social = [tri_codes[x] for x in away_teams_named]
 
-social_tags = []
-
-for n in range(380):
-    social_tag = f"#{home_team_social[n]}{away_team_social[n]}"
-    social_tags.append(social_tag)
+social_tags = opta.create_social_tags(home_team_social, away_team_social)
 
 #TODO 9 - FIND A WAY TO GET AND HANDLE THE STATS PERFORM MATCH IDs - DONE
 
@@ -166,14 +115,14 @@ for n in range(380):
     matches['StatsPerformMatchID'].append(sp_id_list[n])
     matches['TeamTalksMatchWeek'].append(tt_mws[n])
 
-# for n in range(amount_of_results):
-#     matches['Score1'].append(home_team_scores[n])
-#     matches['Score2'].append(away_team_scores[n])
+for n in range(amount_of_results):
+    matches['Score1'].append(home_team_scores[n])
+    matches['Score2'].append(away_team_scores[n])
 
-#Ensure the array is full for the data frame by adding None results to the remaining fixtures
-# for n in range(amount_of_fixtures):
-#     matches['Score1'].append(None)
-#     matches['Score2'].append(None)
+# Ensure the array is full for the data frame by adding None results to the remaining fixtures
+for n in range(amount_of_fixtures):
+    matches['Score1'].append(None)
+    matches['Score2'].append(None)
 
 #TODO 13 - SAVE THE MATCHES DICTIONARY INTO A .CSV FILE - DONE
 
