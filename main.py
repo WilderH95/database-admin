@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import json
 import pandas as pd
 from dictionaries import teams, tri_codes, matches
+from opta_handler import OptaHandler
 
 COMPETITION = "Premier League"
 
@@ -10,29 +11,20 @@ SP_MATCH_LIST = 'Stats_Perform_Match_List.json'
 # MATCH_IDS_CSV = 'PL_24.25_MATCH_IDs.csv'
 # TT_CSV = 'TT_MW_DATA.csv'
 
-tree = ET.parse(OPTA_F1)
-root = tree.getroot()
+# Initialise Opta Handler class (pass in latest F1 file from Opta)
+opta = OptaHandler(OPTA_F1)
 
-#TODO 1 - GET ALL THE MATCH DATES AND MATCH TIMES AND PUT THEM IN TWO LISTS - DONE
 
-date_and_time = []
-
-for n in range(380):
-    date = root[0][n][0][0].text
-    date_and_time.append(date)
-
-dates = [date[0:10] for date in date_and_time]
-times = [time[-8:-3] for time in date_and_time]
-
-# print(dates)
-# print(times)
+# Get all match dates and match times and put them into two lists
+dates = opta.get_match_dates()
+times = opta.get_match_times()
 
 #TODO 3 - GET ALL THE HOME TEAMS AND PUT THEM IN A LIST - DONE
 
 home_teams = []
 
 for n in range(380):
-    home_team = root[0][n].find('TeamData').attrib['TeamRef']
+    home_team = opta.root[0][n].find('TeamData').attrib['TeamRef']
     home_teams.append(home_team)
 
 #TODO 4 - GET ALL THE AWAY TEAMS AND PUT THEM IN A LIST - DONE
@@ -41,9 +33,9 @@ away_teams = []
 
 for n in range(380):
     try:
-        away_team = root[0][n][5].attrib['TeamRef']
+        away_team = opta.root[0][n][5].attrib['TeamRef']
     except IndexError:
-        away_team = root[0][n][4].attrib['TeamRef']
+        away_team = opta.root[0][n][4].attrib['TeamRef']
 
     away_teams.append(away_team)
 
@@ -83,7 +75,7 @@ away_teams_named = [teams[x] for x in away_teams]
 opta_ids = []
 
 for n in range(380):
-    opta_id = root[0][n].attrib['uID'].strip("g")
+    opta_id = opta.root[0][n].attrib['uID'].strip("g")
     opta_ids.append(opta_id)
 
 #TODO 7 - GET ALL THE VENUES AND ADD THEM TO A LIST - DONE
@@ -91,7 +83,7 @@ for n in range(380):
 venues = []
 
 for n in range(380):
-    venue = root[0][n].find("Stat").text
+    venue = opta.root[0][n].find("Stat").text
     venues.append(venue)
 
 #TODO 8 - CREATE THE MATCH SOCIAL TAGS AND ADD THEM TO A LIST - DONE
