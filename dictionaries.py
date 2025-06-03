@@ -45,7 +45,7 @@ tri_codes = {
 }
 
 matches = {
-    # 'MatchId' : [],
+    'MatchId' : [],
     'Competition' : [],
     'OptaID' : [],
     'MatchDate' : [],

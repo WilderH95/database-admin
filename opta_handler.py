@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import json
-import pandas as pd
 from collections import namedtuple
+from dictionaries import matches
 
 class OptaHandler:
 
@@ -109,3 +109,64 @@ class OptaHandler:
             social_tags.append(social_tag)
 
         return social_tags
+
+    def get_ss_ids(self, sp_match_list, social_tags):
+        with open(sp_match_list, "r", encoding="utf8") as sp_data_file:
+            sp_data = json.load(sp_data_file)
+
+        sp_ids = {}
+
+        for n in range(380):
+            sp_ids[
+                f'#{sp_data["match"][n]["matchInfo"]["contestant"][0]["code"]}{sp_data["match"][n]["matchInfo"]["contestant"]
+                [1]["code"]}'] = sp_data["match"][n]["matchInfo"]['id']
+
+        sp_id_list = [sp_ids[x] for x in social_tags]
+
+        return sp_id_list
+
+    def create_tt_mws(self):
+        tt_mws = []
+
+        y = 0
+        for n in range(38):
+            y += 1
+            for x in range(10):
+                tt_mws.append(y)
+
+        return tt_mws
+
+    def create_match_ids(self):
+        match_ids = []
+
+        y = 2500
+        for n in range(380):
+            match_ids.append(y)
+            y += 1
+
+        return match_ids
+
+    def create_fixs_dict(self, match_ids, competition, opta_ids, dates, times, home_teams_named, away_teams_named,
+                         venues, social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
+                         amount_of_fixtures):
+        for n in range(380):
+            matches['MatchId'].append(match_ids[n])
+            matches['Competition'].append(competition)
+            matches['OptaID'].append(opta_ids[n])
+            matches['MatchDate'].append(dates[n])
+            matches['KickOffTime'].append(times[n])
+            matches['TeamID1'].append(home_teams_named[n])
+            matches['TeamID2'].append(away_teams_named[n])
+            matches['Venue'].append(venues[n])
+            matches['MatchHashTag'].append(social_tags[n])
+            matches['StatsPerformMatchID'].append(sp_id_list[n])
+            matches['TeamTalksMatchWeek'].append(tt_mws[n])
+
+        for n in range(amount_of_results):
+            matches['Score1'].append(home_team_scores[n])
+            matches['Score2'].append(away_team_scores[n])
+
+        # Ensure the array is full for the data frame by adding None results to the remaining fixtures
+        for n in range(amount_of_fixtures):
+            matches['Score1'].append(None)
+            matches['Score2'].append(None)
