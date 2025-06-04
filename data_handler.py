@@ -149,11 +149,11 @@ class DataHandler:
 
         return match_ids
 
-    def create_fixs_dict(self, match_ids, competition, opta_ids, dates, times, home_teams_db_id, away_teams_db_id,
+    def create_fixs_dict(self, competition, opta_ids, dates, times, home_teams_db_id, away_teams_db_id,
                          venues, social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
                          amount_of_fixtures):
         for n in range(380):
-            matches['MatchId'].append(match_ids[n])
+           # matches['MatchId'].append(match_ids[n])
             matches['CompID'].append(competition)
             matches['OptaID'].append(opta_ids[n])
             matches['MatchDate'].append(dates[n])
@@ -175,9 +175,10 @@ class DataHandler:
             matches['Score2'].append(None)
        # Generate and fill with None or False values empty columns to match Matches table in db.
         for n in range(380):
-            matches['Attendance'].append(None)
-            matches['NeutralVenue'].append(False)
-            matches['GoalRushMatchOrder'].append(None)
+            pass
+           # matches['Attendance'].append(None)
+           # matches['NeutralVenue'].append(False)
+           # matches['GoalRushMatchOrder'].append(None)
 
     def create_df(self):
         pl_dataframe = pd.DataFrame(matches)

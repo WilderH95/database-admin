@@ -60,7 +60,7 @@ home_teams_db_id = [team_db_ids[x] for x in home_teams_named]
 away_teams_db_id = [team_db_ids[x] for x in away_teams_named]
 
 # Call the "create_fixs_dict" method and pass in all the above lists that have been created to populate the "matches" dict.
-data.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams_db_id, away_teams_db_id, venues,
+data.create_fixs_dict(COMPETITION, opta_ids, dates, times, home_teams_db_id, away_teams_db_id, venues,
                       social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
                       amount_of_fixtures)
 

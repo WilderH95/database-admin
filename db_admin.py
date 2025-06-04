@@ -26,18 +26,21 @@ class DBAdmin:
         cursor.execute(f'''
             CREATE TABLE {table_name} (
                 MatchId INT,
-                Competition TEXT(255),
+                CompID INT,
                 OptaID INT,
                 MatchDate DATETIME,
-                KickOffTime DATETIME,
-                TeamID1 TEXT(255),
-                TeamID2 TEXT(255),
+                KickOffTime TEXT(255),
+                TeamID1 INT,
+                TeamID2 INT,
                 Score1 INT,
                 Score2 INT,
-                Venue TEXT(255),
+                VenueID INT,
+                Attendance TEXT(255),
                 MatchHashTag TEXT(255),
                 StatsPerformMatchID TEXT(255),
-                TeamTalksMatchWeek INT
+                TeamTalksMatchWeek INT,
+                NeutralVenue YESNO,
+                GoalRushMatchOrder, TEXT(255)
             )
         ''')
         pyodbc_conn.commit()
@@ -46,7 +49,7 @@ class DBAdmin:
 
     def update_matches(self, df):
         # Convert df column types to match MS Access db column data types.
-        df['MatchId'] = df['MatchId'].astype('Int64')
+       # df['MatchId'] = df['MatchId'].astype('Int64')
         df['CompID'] = df['CompID'].astype('Int64')
         df['OptaID'] = df['OptaID'].astype('Int64')
         df['MatchDate'] = pd.to_datetime(df['MatchDate'])
@@ -56,12 +59,12 @@ class DBAdmin:
         df['Score1'] = df['Score1'].astype('Int64')
         df['Score2'] = df['Score2'].astype('Int64')
         df['VenueID'] = df['VenueID'].astype('Int64')
-        df['Attendance'] = df['Attendance'].astype('Int64')
+       # df['Attendance'] = df['Attendance'].astype('Int64')
         df['MatchHashTag'] = df['MatchHashTag'].astype(str)
         df['StatsPerformMatchID'] = df['StatsPerformMatchID'].astype(str)
         df['TeamTalksMatchWeek'] = df['TeamTalksMatchWeek'].astype('Int64')
-        df['NeutralVenue'] = df['NeutralVenue'].astype(bool)
-        df['GoalRushMatchOrder'] = df['GoalRushMatchOrder'].astype(str)
+       # df['NeutralVenue'] = df['NeutralVenue'].astype(bool)
+       # df['GoalRushMatchOrder'] = df['GoalRushMatchOrder'].astype(str)
 
         # Add the df to the MS Access db using df.to_sql
         params = urllib.parse.quote_plus(self.odbc_conn_str)
