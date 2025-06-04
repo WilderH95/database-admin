@@ -66,10 +66,9 @@ data.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams
 
 # Use pandas to translate the "matches" dictionary into a dataframe, then export this as a CSV using pandas.
 pl_dataframe = data.create_df()
-print(pl_dataframe.dtypes)
-pl_dataframe.to_csv("PL_Matches.csv")
-print("CSV created successfully.")
+
+# pl_dataframe.to_csv("PL_Matches.csv")
+# print("CSV created successfully.")
 
 db_admin = DBAdmin()
 db_admin.update_matches(pl_dataframe)
-print(pl_dataframe.dtypes)

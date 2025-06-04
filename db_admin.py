@@ -1,11 +1,13 @@
 import pandas as pd
-
+import pyodbc
+import urllib
 from dictionaries import *
 from data_handler import DataHandler
-import pyodbc
 from sqlalchemy import create_engine
+from sqlalchemy.dialects import registry
+registry.load("access.pyodbc")
 
-DB_PATH = "PLP.mdb"
+DB_PATH = "C:/Users/Harry.Wilder/PycharmProjects/database-admin/PLP.mdb"
 
 class DBAdmin:
 
@@ -60,4 +62,9 @@ class DBAdmin:
         df['TeamTalksMatchWeek'] = df['TeamTalksMatchWeek'].astype('Int64')
         df['NeutralVenue'] = df['NeutralVenue'].astype(bool)
         df['GoalRushMatchOrder'] = df['GoalRushMatchOrder'].astype(str)
-        return df
+
+        # Add the df to the MS Access db using df.to_sql
+        params = urllib.parse.quote_plus(self.odbc_conn_str)
+        alchemy_conn_str = f"access+pyodbc:///?odbc_connect={params}"
+        engine = create_engine(alchemy_conn_str)
+        df.to_sql(name="Matches", con=engine, if_exists='append', index=False)
