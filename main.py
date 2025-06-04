@@ -1,9 +1,9 @@
 import pandas as pd
-from dictionaries import teams, tri_codes, matches
+from dictionaries import teams, tri_codes, matches, team_db_ids
 from data_handler import DataHandler
 from db_admin import DBAdmin
 
-COMPETITION = "Premier League"
+COMPETITION = 193
 
 OPTA_F1 = 'F1_FixturesResults.xml'
 SP_MATCH_LIST = 'Stats_Perform_Match_List.json'
@@ -55,15 +55,21 @@ tt_mws = data.create_tt_mws()
 # db of matches.
 match_ids = data.create_match_ids()
 
+# Convert all team name strings into database id ints so that they can be entered as foreign keys into the db.
+home_teams_db_id = [team_db_ids[x] for x in home_teams_named]
+away_teams_db_id = [team_db_ids[x] for x in away_teams_named]
+
 # Call the "create_fixs_dict" method and pass in all the above lists that have been created to populate the "matches" dict.
-data.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams_named, away_teams_named, venues,
+data.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams_db_id, away_teams_db_id, venues,
                       social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
                       amount_of_fixtures)
 
 # Use pandas to translate the "matches" dictionary into a dataframe, then export this as a CSV using pandas.
 pl_dataframe = data.create_df()
+print(pl_dataframe.dtypes)
 pl_dataframe.to_csv("PL_Matches.csv")
 print("CSV created successfully.")
 
 db_admin = DBAdmin()
-db_admin.create_new_matches()
+db_admin.update_matches(pl_dataframe)
+print(pl_dataframe.dtypes)

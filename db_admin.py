@@ -1,9 +1,11 @@
+import pandas as pd
+
 from dictionaries import *
 from data_handler import DataHandler
 import pyodbc
 from sqlalchemy import create_engine
 
-DB_PATH = "D:\Python-Projects\database-admin\PLP.mdb"
+DB_PATH = "PLP.mdb"
 
 class DBAdmin:
 
@@ -39,3 +41,23 @@ class DBAdmin:
         pyodbc_conn.commit()
         cursor.close()
         pyodbc_conn.close()
+
+    def update_matches(self, df):
+        # Convert df column types to match MS Access db column data types.
+        df['MatchId'] = df['MatchId'].astype('Int64')
+        df['CompID'] = df['CompID'].astype('Int64')
+        df['OptaID'] = df['OptaID'].astype('Int64')
+        df['MatchDate'] = pd.to_datetime(df['MatchDate'])
+        df['KickOffTime'] = df['KickOffTime'].astype(str)
+        df['TeamID1'] = df['TeamID1'].astype('Int64')
+        df['TeamID2'] = df['TeamID2'].astype('Int64')
+        df['Score1'] = df['Score1'].astype('Int64')
+        df['Score2'] = df['Score2'].astype('Int64')
+        df['VenueID'] = df['VenueID'].astype('Int64')
+        df['Attendance'] = df['Attendance'].astype('Int64')
+        df['MatchHashTag'] = df['MatchHashTag'].astype(str)
+        df['StatsPerformMatchID'] = df['StatsPerformMatchID'].astype(str)
+        df['TeamTalksMatchWeek'] = df['TeamTalksMatchWeek'].astype('Int64')
+        df['NeutralVenue'] = df['NeutralVenue'].astype(bool)
+        df['GoalRushMatchOrder'] = df['GoalRushMatchOrder'].astype(str)
+        return df

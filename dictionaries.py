@@ -44,9 +44,55 @@ tri_codes = {
     "Wolves" : "WOL"
 }
 
+team_db_ids = {
+    "Arsenal" : 2,
+    "Aston Villa" : 6,
+    "Bournemouth" : 395,
+    "Brentford" : 393,
+    "Brighton" : 386,
+    "Chelsea" : 1,
+    "Crystal Palace" : 42,
+    "Everton" : 17,
+    "Fulham" : 45,
+    "Ipswich" : 410,
+    "Leicester" : 4,
+    "Liverpool" : 8,
+    "Man City" : 10,
+    "Man Utd" : 9,
+    "Newcastle" : 11,
+    "Nottingham Forest" : 61,
+    "Southampton" : 16,
+    "Spurs" : 12,
+    "West Ham" : 13,
+    "Wolves" : 89
+}
+
+venue_ids = {
+    'Emirates Stadium' : 258,
+    'Villa Park' : 259,
+    'Vitality Stadium' : 260,
+    'Gtech Community Stadium' : 261,
+    'American Express Stadium' : 262,
+    'Stamford Bridge' : 263,
+    'Selhurst Park' : 264,
+    'Goodison Park' : 265,
+    'Craven Cottage' : 266,
+    'King Power Stadium' : 268,
+    'Anfield' : 269,
+    'Etihad Stadium' : 270,
+    'Old Trafford' : 271,
+    "St. James' Park" : 272,
+    'The City Ground' : 273,
+    "St. Mary's Stadium" : 274,
+    'Tottenham Hotspur Stadium' : 275,
+    'London Stadium' : 276,
+    'Molineux Stadium' : 277,
+    'Portman Road' : 285
+}
+
 matches = {
     'MatchId' : [],
-    'Competition' : [],
+    'CompID' : [],
     'OptaID' : [],
     'MatchDate' : [],
     'KickOffTime' : [],
@@ -54,8 +100,11 @@ matches = {
     'TeamID2' : [],
     'Score1' : [],
     'Score2' : [],
-    'Venue' : [],
+    'VenueID' : [],
+    'Attendance' : [],
     'MatchHashTag' : [],
     'StatsPerformMatchID' : [],
-    'TeamTalksMatchWeek' : []
+    'TeamTalksMatchWeek' : [],
+    'NeutralVenue' : [],
+    'GoalRushMatchOrder' : []
 }

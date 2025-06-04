@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import json
 from collections import namedtuple
-from dictionaries import matches
+from dictionaries import *
 import pandas as pd
 
 class DataHandler:
@@ -100,6 +100,8 @@ class DataHandler:
             venue = self.root[0][n].find("Stat").text
             venues.append(venue)
 
+        venues = [venue_ids[x] for x in venues]
+
         return venues
 
     def create_social_tags(self, home_team_social, away_team_social):
@@ -147,18 +149,18 @@ class DataHandler:
 
         return match_ids
 
-    def create_fixs_dict(self, match_ids, competition, opta_ids, dates, times, home_teams_named, away_teams_named,
+    def create_fixs_dict(self, match_ids, competition, opta_ids, dates, times, home_teams_db_id, away_teams_db_id,
                          venues, social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
                          amount_of_fixtures):
         for n in range(380):
             matches['MatchId'].append(match_ids[n])
-            matches['Competition'].append(competition)
+            matches['CompID'].append(competition)
             matches['OptaID'].append(opta_ids[n])
             matches['MatchDate'].append(dates[n])
             matches['KickOffTime'].append(times[n])
-            matches['TeamID1'].append(home_teams_named[n])
-            matches['TeamID2'].append(away_teams_named[n])
-            matches['Venue'].append(venues[n])
+            matches['TeamID1'].append(home_teams_db_id[n])
+            matches['TeamID2'].append(away_teams_db_id[n])
+            matches['VenueID'].append(venues[n])
             matches['MatchHashTag'].append(social_tags[n])
             matches['StatsPerformMatchID'].append(sp_id_list[n])
             matches['TeamTalksMatchWeek'].append(tt_mws[n])
@@ -171,6 +173,11 @@ class DataHandler:
         for n in range(amount_of_fixtures):
             matches['Score1'].append(None)
             matches['Score2'].append(None)
+       # Generate and fill with None or False values empty columns to match Matches table in db.
+        for n in range(380):
+            matches['Attendance'].append(None)
+            matches['NeutralVenue'].append(False)
+            matches['GoalRushMatchOrder'].append(None)
 
     def create_df(self):
         pl_dataframe = pd.DataFrame(matches)
