@@ -1,6 +1,7 @@
 import pandas as pd
 from dictionaries import teams, tri_codes, matches
-from opta_handler import OptaHandler
+from data_handler import DataHandler
+from db_admin import DBAdmin
 
 COMPETITION = "Premier League"
 
@@ -9,18 +10,18 @@ SP_MATCH_LIST = 'Stats_Perform_Match_List.json'
 # MATCH_IDS_CSV = 'PL_24.25_MATCH_IDs.csv'
 
 # Initialise Opta Handler class (pass in latest F1 file from Opta)
-opta = OptaHandler(OPTA_F1)
+data = DataHandler(OPTA_F1)
 
 # Get all match dates and match times and put them into two lists
-dates = opta.get_match_dates()
-times = opta.get_match_times()
+dates = data.get_match_dates()
+times = data.get_match_times()
 
 # Get all the home and away teams and put them into two lists
-home_teams = opta.get_home_teams()
-away_teams = opta.get_away_teams()
+home_teams = data.get_home_teams()
+away_teams = data.get_away_teams()
 
 # Get all results and add to lists - work out the amount of results and fixtures outstanding
-results = opta.get_results()
+results = data.get_results()
 home_team_scores = results.home_team_scores
 away_team_scores = results.away_team_scores
 amount_of_results = results.amount_of_results
@@ -31,35 +32,38 @@ home_teams_named = [teams[x] for x in home_teams]
 away_teams_named = [teams[x] for x in away_teams]
 
 # Get all Opta IDs and add them to a list
-opta_ids = opta.get_opta_ids()
+opta_ids = data.get_opta_ids()
 
 # Get the venues and add them to a list
-venues = opta.get_venues()
+venues = data.get_venues()
 
 # Use the "tri_codes" dictionary with the named home teams lists to create to separate social tag lists. Then call
 # "create_social_tag" to join these into one list.
 home_team_social = [tri_codes[x] for x in home_teams_named]
 away_team_social = [tri_codes[x] for x in away_teams_named]
-social_tags = opta.create_social_tags(home_team_social, away_team_social)
+social_tags = data.create_social_tags(home_team_social, away_team_social)
 
 # Use SS data to create a list of SS match IDs in the correct order. Note that the "social_tags" list must have been
 # created with the "create_social_tags" method first, as the "social_tags" list is passed in to order the ids correctly.
-sp_id_list = opta.get_ss_ids(SP_MATCH_LIST, social_tags)
+sp_id_list = data.get_ss_ids(SP_MATCH_LIST, social_tags)
 
 # Create a list of Team Talks matchweek ids. This will simply be a list of 10 identical digits from 1 to 38.
 # Only call this and add it to the df/db when creating fixtures for first time.
-tt_mws = opta.create_tt_mws()
+tt_mws = data.create_tt_mws()
 
 # Call the "create_match_ids" method to create a list of 380 match ids from 2500 onwards. Only call when creating a new
 # db of matches.
-match_ids = opta.create_match_ids()
+match_ids = data.create_match_ids()
 
-# Call the "create_fixs_dict" method and pass in all the aboce lists that have been created to populate the "matches" dict.
-opta.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams_named, away_teams_named, venues,
+# Call the "create_fixs_dict" method and pass in all the above lists that have been created to populate the "matches" dict.
+data.create_fixs_dict(match_ids, COMPETITION, opta_ids, dates, times, home_teams_named, away_teams_named, venues,
                       social_tags, sp_id_list, tt_mws, amount_of_results, home_team_scores, away_team_scores,
                       amount_of_fixtures)
 
 # Use pandas to translate the "matches" dictionary into a dataframe, then export this as a CSV using pandas.
-pl_dataframe = pd.DataFrame(matches)
+pl_dataframe = data.create_df()
 pl_dataframe.to_csv("PL_Matches.csv")
 print("CSV created successfully.")
+
+db_admin = DBAdmin()
+db_admin.create_new_matches()

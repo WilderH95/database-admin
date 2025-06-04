@@ -2,8 +2,9 @@ import xml.etree.ElementTree as ET
 import json
 from collections import namedtuple
 from dictionaries import matches
+import pandas as pd
 
-class OptaHandler:
+class DataHandler:
 
     def __init__(self, opta_f1):
         self.tree = ET.parse(opta_f1)
@@ -170,3 +171,8 @@ class OptaHandler:
         for n in range(amount_of_fixtures):
             matches['Score1'].append(None)
             matches['Score2'].append(None)
+
+    def create_df(self):
+        pl_dataframe = pd.DataFrame(matches)
+
+        return pl_dataframe
