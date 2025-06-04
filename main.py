@@ -5,8 +5,8 @@ from db_admin import DBAdmin
 
 COMPETITION = 193
 
-OPTA_F1 = 'F1_FixturesResults.xml'
-SP_MATCH_LIST = 'Stats_Perform_Match_List.json'
+OPTA_F1 = 'data/F1_FixturesResults.xml'
+SP_MATCH_LIST = 'data/Stats_Perform_Match_List.json'
 # MATCH_IDS_CSV = 'PL_24.25_MATCH_IDs.csv'
 
 # Initialise Opta Handler class (pass in latest F1 file from Opta)
@@ -72,3 +72,4 @@ pl_dataframe = data.create_df()
 
 db_admin = DBAdmin()
 db_admin.update_matches(pl_dataframe)
+print("Database updated.")

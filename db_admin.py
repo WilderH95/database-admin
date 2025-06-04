@@ -1,13 +1,11 @@
 import pandas as pd
 import pyodbc
 import urllib
-from dictionaries import *
-from data_handler import DataHandler
 from sqlalchemy import create_engine
 from sqlalchemy.dialects import registry
 registry.load("access.pyodbc")
 
-DB_PATH = "C:/Users/Harry.Wilder/PycharmProjects/database-admin/PLP.mdb"
+DB_PATH = "C:/Users/Harry.Wilder/PycharmProjects/database-admin/data/PLP.mdb"
 
 class DBAdmin:
 
