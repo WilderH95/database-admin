@@ -1,8 +1,9 @@
 import pandas as pd
 import pyodbc
 import urllib
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.dialects import registry
+
 registry.load("access.pyodbc")
 
 DB_PATH = "C:/Users/Harry.Wilder/PycharmProjects/database-admin/data/PLP.mdb"
@@ -45,7 +46,7 @@ class DBAdmin:
         cursor.close()
         pyodbc_conn.close()
 
-    def update_matches(self, df):
+    def populate_new_matches(self, df):
         # Convert df column types to match MS Access db column data types.
        # df['MatchId'] = df['MatchId'].astype('Int64')
         df['CompID'] = df['CompID'].astype('Int64')
@@ -69,3 +70,47 @@ class DBAdmin:
         alchemy_conn_str = f"access+pyodbc:///?odbc_connect={params}"
         engine = create_engine(alchemy_conn_str)
         df.to_sql(name="Matches", con=engine, if_exists='append', index=False)
+
+    # to_sql does not work for updating rows with new data. Therefore the following must be done via manual sql statements
+    def update_matches(self, df):
+        # Connect to the db
+        params = urllib.parse.quote_plus(self.odbc_conn_str)
+        engine = create_engine(f"access+pyodbc:///?odbc_connect={params}")
+
+        #Loop through all rows in "matches" and update results accordingly
+        with engine.begin() as conn:
+            for _, row in df.iterrows():
+                # Check if the OptaID already exists
+                result = conn.execute(
+                    text("SELECT COUNT(*) FROM Matches WHERE OptaID = :id"),
+                    {"id": row["OptaID"]}
+                ).scalar()
+                # Insert new row if OptaID does not exist
+                if result == 0:
+                    conn.execute(
+                        text("""
+                            INSERT INTO Matches (CompID, OptaID, MatchDate, KickOffTime, TeamID1, TeamID2, Score1, Score2
+                            VenueID, MatchHashTag, StatsPerformMatchID, TeamTalksMatchWeek)
+                            VALUES (:CompID, :OptaID, :MatchDate, :KickOffTime, :TeamID1, :TeamID2, :Score1, :Score2,
+                            :VenueID, :MatchHashTag, :StatsPerformMatchID, :TeamTalksMatchWeek)
+                        """), row.to_dict()
+                    )
+                # Update the row with new info if OptaID does exist
+                else:
+                    conn.execute(
+                        text("""
+                            UPDATE Matches
+                            SET MatchDate = :MatchDate,
+                                KickOffTime = :KickOffTime,
+                                Score1 = :Score1,
+                                Score2 = :Score2
+                            WHERE OptaID = :OptaID
+                        """), row.to_dict()
+                    )
+
+    # def validation_snapshot(self, df, key_column):
+    #     ids_to_check = df[key_column].tolist()
+    #     # Snapshot the db
+    #     query = f"SELECT * FROM Matches WHERE {key_column} IN ({','.join(['?'] * len(ids_to_check))})"
+    #     with engine.connect() as conn:
+    #         df_before = pd.read_sql_query(query, conn, params=ids_to_check)

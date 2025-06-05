@@ -71,5 +71,11 @@ pl_dataframe = data.create_df()
 # print("CSV created successfully.")
 
 db_admin = DBAdmin()
-db_admin.update_matches(pl_dataframe)
+
+# USE BELOW CODE TO UPDATE DB WITH NEW MATCHES AT START OF SEASON
+db_admin.populate_new_matches(pl_dataframe)
 print("Database updated.")
+
+# USE BELOW CODE TO UPDATE MATCHES WITH LATEST DATA THROUGHOUT SEASON
+# db_admin.update_matches(pl_dataframe)
+# print("Database updated.")
