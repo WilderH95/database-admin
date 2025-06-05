@@ -4,6 +4,7 @@ from data_handler import DataHandler
 from db_admin import DBAdmin
 
 COMPETITION = 193
+DB_PATH = "C:/Users/Harry.Wilder/PycharmProjects/database-admin/data/PLP.mdb"
 
 OPTA_F1 = 'data/F1_FixturesResults.xml'
 SP_MATCH_LIST = 'data/Stats_Perform_Match_List.json'
@@ -70,7 +71,7 @@ pl_dataframe = data.create_df()
 # pl_dataframe.to_csv("PL_Matches.csv")
 # print("CSV created successfully.")
 
-db_admin = DBAdmin()
+db_admin = DBAdmin(DB_PATH)
 
 # USE BELOW CODE TO UPDATE DB WITH NEW MATCHES AT START OF SEASON
 db_admin.populate_new_matches(pl_dataframe)

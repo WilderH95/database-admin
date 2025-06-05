@@ -91,7 +91,6 @@ venue_ids = {
 }
 
 matches = {
-    #'MatchId' : [],
     'CompID' : [],
     'OptaID' : [],
     'MatchDate' : [],
@@ -101,10 +100,7 @@ matches = {
     'Score1' : [],
     'Score2' : [],
     'VenueID' : [],
-    #'Attendance' : [],
     'MatchHashTag' : [],
     'StatsPerformMatchID' : [],
-    'TeamTalksMatchWeek' : [],
-    #'NeutralVenue' : [],
-    #'GoalRushMatchOrder' : []
+    'TeamTalksMatchWeek' : []
 }
